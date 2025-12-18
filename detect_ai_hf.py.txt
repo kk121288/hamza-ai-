@@ -1,0 +1,47 @@
+from fastapi import APIRouter
+from pydantic import BaseModel
+import torch
+
+router = APIRouter()
+
+MODEL_NAME = "roberta-base-openai-detector"
+
+_tokenizer = None
+_model = None
+
+class DetectRequest(BaseModel):
+    text: str
+
+def softmax(logits: torch.Tensor) -> torch.Tensor:
+    max_logit = torch.max(logits)
+    exps = torch.exp(logits - max_logit)
+    return exps / torch.sum(exps, dim=-1)
+
+def ai_probability_for(text: str) -> float:
+    global _tokenizer, _model
+    inputs = _tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+    with torch.no_grad():
+        outputs = _model(**inputs)
+        logits = outputs.logits.squeeze(0)
+        probs = softmax(logits)
+
+    id2label = getattr(_model.config, "id2label", {}) or {}
+    ai_indices = []
+    for idx, label in id2label.items():
+        norm = str(label).lower()
+        if "fake" in norm or "ai" in norm or "generated" in norm or "gpt" in norm:
+            ai_indices.append(int(idx))
+
+    if not ai_indices:
+        ai_idx = int(torch.argmax(probs).item())
+        ai_prob = float(probs[ai_idx].item())
+        return round(ai_prob, 4)
+
+    ai_prob = float(torch.sum(probs[ai_indices]).item())
+    return round(ai_prob, 4)
+
+@router.post("/detect_ai_hf")
+def detect_ai_hf(req: DetectRequest):
+    prob = ai_probability_for(req.text)
+    return {"ai_probability": prob}
+

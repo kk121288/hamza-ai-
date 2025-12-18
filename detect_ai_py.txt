@@ -1,0 +1,62 @@
+# detect_ai_hf.py
+from typing import Dict
+import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ضع اسم النموذج الذي تريد استخدامه هنا
+# مثال: "roberta-base-openai-detector" أو أي نموذج تصنيف متاح على Hugging Face
+MODEL_NAME = "roberta-base-openai-detector"
+
+# اختيار الجهاز: GPU إن وُجد، وإلا CPU
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+# تحميل التوكنيزر والنموذج مرة واحدة عند استيراد الملف
+try:
+    logger.info(f"Loading model {MODEL_NAME} on {DEVICE}")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+    model.to(DEVICE)
+    model.eval()
+except Exception as e:
+    logger.exception("Failed to load HF model. Make sure MODEL_NAME is correct and dependencies installed.")
+    # نرفع الاستثناء ليتعامل معه المستدعي أو نترك نسخة بديلة تعمل
+    raise
+
+def detect_ai_text_hf(text: str, max_length: int = 512) -> Dict[str, float]:
+    """
+    يعيد احتمال أن النص مولد آلياً باستخدام نموذج تصنيف من Hugging Face.
+    النتيجة: {"ai_probability": 0.0-1.0}
+    """
+    if not text or not text.strip():
+        return {"ai_probability": 0.0}
+
+    # تحضير الدخل مع اقتطاع للطول
+    inputs = tokenizer(
+        text,
+        return_tensors="pt",
+        truncation=True,
+        max_length=max_length,
+        padding=True
+    )
+
+    # نقل التنسورات إلى الجهاز المناسب
+    inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
+
+    with torch.no_grad():
+        outputs = model(**inputs)
+
+    # نفترض أن المخرجات logits مع ترتيب [non-ai, ai] أو حسب تسمية النموذج
+    logits = outputs.logits
+    probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
+
+    # محاولة ذكية لاستخراج فهرس فئة AI
+    # إذا كان النموذج ثنائي، نفترض الفئة الثانية هي AI؛ إن لم تكن، قد تحتاج تعديل index
+    ai_index = 1 if probs.shape[0] > 1 else 0
+    ai_prob = float(probs[ai_index])
+
+    return {"ai_probability": round(ai_prob, 4)}
+

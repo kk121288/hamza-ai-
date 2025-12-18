@@ -1,0 +1,7 @@
+from main import app
+
+for r in app.routes:
+    if hasattr(r, "methods"):
+        print(f"{r.path}  {sorted(list(r.methods))}")
+    else:
+        print(f"{r.path}  <{type(r).__name__}>")

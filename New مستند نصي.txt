@@ -1,0 +1,28 @@
+"D:\New folder\AI-Plagiarism-Checker\venv"
+"D:\New folder\AI-Plagiarism-Checker\__pycache__"
+
+"D:\New folder\AI-Plagiarism-Checker\check_compile.py
+""D:\New folder\AI-Plagiarism-Checker\detect_ai_hf.py"
+"D:\New folder\AI-Plagiarism-Checker\detect_ai_hf.py.txt"
+"D:\New folder\AI-Plagiarism-Checker\detect_ai_py.txt"
+"D:\New folder\AI-Plagiarism-Checker\index.html"
+"D:\New folder\AI-Plagiarism-Checker\main.py"
+"D:\New folder\AI-Plagiarism-Checker\print_routes.py"
+"D:\New folder\AI-Plagiarism-Checker\print_routes.py.txt"
+"D:\New folder\AI-Plagiarism-Checker\quick-test.ps1.txt"
+
+"D:\New folder\AI-Plagiarism-Checker\requirement.txt.txt"
+"D:\New folder\AI-Plagiarism-Checker\setup-and-run.ps1.txt"
+"D:\New folder\AI-Plagiarism-Checker\show_routes.py"
+"D:\New folder\AI-Plagiarism-Checker\test_all_libs.py"
+"D:\New folder\AI-Plagiarism-Checker\test_all_libs.py"
+"D:\New folder\AI-Plagiarism-Checker\test_model.py"
+"D:\New folder\AI-Plagiarism-Checker\test_model.py.txt"
+"D:\New folder\AI-Plagiarism-Checker\test_model_backup.py"
+"D:\New folder\AI-Plagiarism-Checker\test_model_fixed.py"
+"D:\New folder\AI-Plagiarism-Checker\test_transformers.py"
+
+"D:\New folder\AI-Plagiarism-Checker\test_transformers.py.txt"
+"D:\New folder\AI-Plagiarism-Checker\uvicorn.log"
+
+"D:\New folder\AI-Plagiarism-Checker\ش.txt"

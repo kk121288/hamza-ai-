@@ -1,0 +1,2 @@
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/detect_ai_hf" -Headers @{ "Content-Type" = "application/json" } -Body '{"text":"هذا نص اختبار"}'
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/check" -Headers @{ "Content-Type" = "application/json" } -Body '{"doc":"نص للاختبار","references":["نص 1","نص 2"]}'

@@ -1,0 +1,21 @@
+
+# -*- coding: utf-8 -*-
+"""
+اختبار مكتبة transformers للتأكد من التثبيت
+"""
+
+print("بدء اختبار مكتبة transformers...")
+
+try:
+    from transformers import pipeline
+    print("تم استيراد مكتبة transformers بنجاح ✅")
+
+    # إنشاء نموذج بسيط لتحليل المشاعر
+    classifier = pipeline("sentiment-analysis")
+    result = classifier("الذكاء الاصطناعي مذهل!")
+    print("نتيجة التحليل:", result)
+
+except ImportError:
+    print("مكتبة transformers غير مثبتة ❌")
+except Exception as e:
+    print("حدث خطأ أثناء تشغيل النموذج:", e)
